@@ -6,10 +6,10 @@ import React from "react";
 const TopView = () => {
   return (
     <div className="flex justify-between items-center">
-      <div className="flex gap-2 items-center">
+      <Link href={`/`} className="flex gap-x-0.5 items-center">
         <Image src="/trash-mail.png" width={50} height={50} alt="logo" />
-        <h2 className="text-xl tracking-tight text-blue-500">trashmails.</h2>
-      </div>
+        <h2 className="text-xl tracking-tight text-blue-500 font-bold">trashmails.</h2>
+      </Link>
 
       <Link
         href={`https://github.com/utkarsh125`}
