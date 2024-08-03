@@ -7,7 +7,7 @@ const page = () => {
   return (
     <div className=''>
       <TopView />
-      <hr  className='my-3'/>
+      
       <SignHero />
     </div>
   )
