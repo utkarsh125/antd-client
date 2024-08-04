@@ -13,7 +13,7 @@ const TopView = () => {
 
       <Link
         href={`https://github.com/utkarsh125`}
-        className="flex gap-2 items-center hover:text-blue-500"
+        className="flex gap-2 items-center text-white hover:text-blue-500"
       >
         <h1 className="">Want to continue as a developer?</h1>
         <GithubOutlined />
