@@ -1,45 +1,50 @@
 "use client";
 
-import { Button, Dropdown, Menu, Modal } from "antd";
-import { MailOutlined, PlusOutlined, SettingOutlined } from "@ant-design/icons";
-import React, { useState } from "react";
+import { Button, Dropdown, Menu, Modal, Progress } from "antd";
+import {
+  DeleteOutlined,
+  DownOutlined,
+  EditOutlined,
+  InboxOutlined,
+  PlusOutlined,
+  SendOutlined,
+  SettingOutlined,
+} from "@ant-design/icons";
+import { useDispatch, useSelector } from "react-redux";
 
-import { DownOutlined } from '@ant-design/icons';
 import Image from "next/image";
-import { InboxOutlined } from "@ant-design/icons";
-import { MenuProps } from "antd";
+import { LucideMail } from "lucide-react";
+import type { MenuProps } from "antd";
+import React from "react";
+import { RootState } from "../redux/store";
+import { selectEmail } from "../redux/features/emailSlice";
+import { setActiveFolder } from "../redux/features/folderSlice";
 
 const DashboardPage: React.FC = () => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedEmail, setSelectedEmail] = useState<string | null>(null);
+  const dispatch = useDispatch();
+  const emails = useSelector((state: RootState) => state.email.emails);
+  const selectedEmailId = useSelector((state: RootState) => state.email.selectedEmailId);
+  const activeFolder = useSelector((state: RootState) => state.folder.activeFolder);
 
-  const emails = [
-    { id: "1", subject: "Welcome to TrashMails!", sender: "admin@trashmails.com", body: "This is your first email!" },
-    { id: "2", subject: "Weekly Newsletter", sender: "news@trashmails.com", body: "Here are some updates for you." },
-    { id: "3", subject: "Security Alert", sender: "security@trashmails.com", body: "Unusual login activity detected." },
-    { id: "4", subject: "Security Alert", sender: "security@trashmails.com", body: "Unusual login activity detected." },
-    { id: "5", subject: "Security Alert", sender: "security@trashmails.com", body: "Unusual login activity detected." },
-  ];
+  const filteredEmails = emails.filter((email) => email.folder === activeFolder);
 
   const showEmail = (id: string) => {
-    setSelectedEmail(id);
-    setIsModalVisible(true);
+    dispatch(selectEmail(id));
   };
 
   const closeModal = () => {
-    setIsModalVisible(false);
-    setSelectedEmail(null);
+    dispatch(selectEmail(""));
   };
 
   const renderEmailList = () => (
     <ul>
-      {emails.map((email) => (
+      {filteredEmails.map((email) => (
         <li
           key={email.id}
-          className="mb-4 p-4 rounded-lg bg-gray-200 cursor-pointer hover:bg-gray-300"
+          className={`mb-2 p-4 rounded-3xl bg-white shadow-lg cursor-pointer hover:bg-blue-50 ${email.read ? '' : 'font-bold'}`}
           onClick={() => showEmail(email.id)}
         >
-          <h4 className="font-bold">{email.subject}</h4>
+          <h4>{email.subject}</h4>
           <p className="text-gray-600">{email.sender}</p>
         </li>
       ))}
@@ -47,7 +52,7 @@ const DashboardPage: React.FC = () => {
   );
 
   const renderEmailContent = () => {
-    const email = emails.find((email) => email.id === selectedEmail);
+    const email = emails.find((email) => email.id === selectedEmailId);
     if (!email) return null;
 
     return (
@@ -59,56 +64,63 @@ const DashboardPage: React.FC = () => {
     );
   };
 
-  const menu: MenuProps['items'] = [
+  const menuItems: MenuProps["items"] = [
     {
-      label: 'New Mail',
-      key: '1',
+      label: "New Mail",
+      key: "1",
       icon: <PlusOutlined />,
-      onClick: () => setIsModalVisible(true),
+      onClick: () => dispatch(selectEmail("new")),
     },
     {
-      label: 'Settings',
-      key: '2',
+      label: "Settings",
+      key: "2",
       icon: <SettingOutlined />,
-    }
+    },
   ];
 
   return (
-    <div className="min-h-screen flex flex-col ">
+    <div className="min-h-screen rounded-3xl mt-10 flex flex-col bg-gray-100 p-4 lg:p-6">
       {/* Header */}
-      <header className="bg-blue-600 p-4 flex justify-between items-center rounded-t-3xl">
+      <header className="bg-white p-4 rounded-3xl shadow-lg flex justify-between items-center mb-4">
         <div className="flex items-center gap-2">
-            <Image src="/hero.png" height={50} width={50} alt="logo"/>
-            <h1 className="text-2xl text-white font-bold">TrashMails Dashboard</h1>
+          <Image src="/hero.png" height={40} width={40} alt="logo" />
+          <h1 className="text-xl text-blue-600 font-semibold">TrashMails Dashboard</h1>
         </div>
-        <Dropdown menu={{ items: menu }} trigger={['click']}>
-          <Button className="text-white bg-blue-800 hover:bg-blue-700" type="text">
+        <Dropdown menu={{ items: menuItems }} trigger={["click"]}>
+          <Button className="text-blue-600" type="text">
             Actions <DownOutlined />
           </Button>
         </Dropdown>
       </header>
 
+      {/* Storage Bar */}
+      <div className="bg-white p-4 rounded-3xl shadow-lg flex items-center mb-4">
+        <LucideMail className="text-blue-600 mr-2" size={20} />
+        <Progress percent={70} showInfo={false} strokeColor="#1890ff" className="flex-1" />
+        <span className="ml-4 text-gray-600">15 GB of 20 GB used</span>
+      </div>
+
       {/* Main Content */}
-      <div className="flex flex-1">
+      <div className="flex flex-1 flex-col lg:flex-row">
         {/* Sidebar */}
-        <aside className="w-1/4 bg-gray-900 text-white p-4 rounded-bl-3xl">
-          <h2 className="text-xl mb-4">Folders</h2>
+        <aside className="w-full lg:w-64 bg-white p-4 rounded-3xl shadow-lg mb-4 lg:mb-0 lg:mr-4">
+          <h2 className="text-xl text-blue-600 font-semibold mb-4">Folders</h2>
           <Menu
-            theme="dark"
             mode="inline"
             defaultSelectedKeys={["inbox"]}
+            onSelect={({ key }) => dispatch(setActiveFolder(key as "inbox" | "sent" | "drafts" | "trash"))}
             items={[
               { key: "inbox", icon: <InboxOutlined />, label: "Inbox" },
-              { key: "sent", icon: <MailOutlined />, label: "Sent" },
-              { key: "drafts", icon: <MailOutlined />, label: "Drafts" },
-              { key: "trash", icon: <MailOutlined />, label: "Trash" },
+              { key: "sent", icon: <SendOutlined />, label: "Sent" },
+              { key: "drafts", icon: <EditOutlined />, label: "Drafts" },
+              { key: "trash", icon: <DeleteOutlined />, label: "Trash" },
             ]}
           />
         </aside>
 
         {/* Email List */}
-        <main className="flex-1 p-6 bg-gray-100 overflow-y-auto rounded-br-3xl">
-          <h2 className="text-2xl mb-4">Inbox</h2>
+        <main className="flex-1 p-6 bg-white rounded-3xl shadow-lg overflow-y-auto">
+          <h2 className="text-2xl mb-4 text-blue-600 font-semibold capitalize">{activeFolder}</h2>
           {renderEmailList()}
         </main>
       </div>
@@ -116,13 +128,14 @@ const DashboardPage: React.FC = () => {
       {/* Email View Modal */}
       <Modal
         title="Email Content"
-        visible={isModalVisible}
+        visible={!!selectedEmailId}
         onCancel={closeModal}
         footer={[
           <Button key="close" onClick={closeModal}>
             Close
           </Button>,
         ]}
+        className="rounded-3xl"
       >
         {renderEmailContent()}
       </Modal>

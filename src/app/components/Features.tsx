@@ -56,10 +56,10 @@ const Features: React.FC = () => {
             xl={6}     // Four columns on extra-large screens
           >
             <Card
-              hoverable
-              className="transition-transform transform hover:scale-105 bg-white"
+              // hoverable
+              className="bg-white"
               style={{ borderRadius: '12px', overflow: 'hidden' }}
-              bodyStyle={{ padding: '24px', textAlign: 'center' }}
+              // bodyStyle={{ padding: '24px', textAlign: 'center' }} //deprecated
             >
               <div className="flex flex-col items-center mb-4">
                 <div className="text-blue-500 mb-4">{feature.icon}</div>

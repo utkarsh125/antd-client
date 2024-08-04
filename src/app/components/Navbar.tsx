@@ -32,7 +32,7 @@ const Navbar: React.FC = () => {
         },
       }}
     >
-      <div className="flex justify-between items-center py-4 px-6 bg-black">
+      <div className="flex justify-between items-center py-4 px-6 rounded-3xl mb-5">
         <div className="flex gap-2 items-center">
           <Image src="/trash-mail.png" width={50} height={50} alt="logo" />
           <h2 className="text-xl tracking-tight font-bold text-blue-500">

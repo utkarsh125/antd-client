@@ -1,9 +1,8 @@
 import "./globals.css";
 
-// import { Inter } from "next/font/google";
 import type { Metadata } from "next";
-
-// const inter = Inter({ subsets: ["latin"] });
+// import { Provider } from "react-redux";
+import { store } from "./redux/store";
 
 export const metadata: Metadata = {
   title: "trashmails",
@@ -17,7 +16,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="mx-10 my-10 bg-black">{children}</body>
+      <body className="mx-10 my-10 bg-gradient-to-tr from-gray-900 via-gray-800 to-gray-400">
+        {/* <Provider store={store}> */}
+          {children}
+        {/* </Provider> */}
+      </body>
     </html>
   );
 }
