@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="mx-10 my-10 
+      <body className="mx-10 my-10 sm:my-0 
       bg-gradient-to-t from-black via-gray-900 to-gray-800">
         {/* <Provider store={store}> */}
           {children}

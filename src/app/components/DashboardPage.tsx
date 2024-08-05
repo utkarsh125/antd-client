@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Image from "next/image";
 import { LucideMail } from "lucide-react";
-import { RadioChangeEvent } from 'antd/es/radio'; // Added import
+import { RadioChangeEvent } from 'antd/es/radio';
 import { RootState } from "../redux/store";
 import { setActiveFolder } from "../redux/features/folderSlice";
 import { setTheme } from "../redux/features/themeSlice";
@@ -29,7 +29,7 @@ const DashboardPage: React.FC = () => {
 
   const showEmail = (id: string) => {
     dispatch(selectEmail(id));
-    dispatch(markAsRead(id)); // Mark email as read when opened
+    dispatch(markAsRead(id));
   };
 
   const closeModal = () => {
@@ -37,7 +37,7 @@ const DashboardPage: React.FC = () => {
   };
 
   const handleDeleteEmail = (id: string) => {
-    dispatch(moveToTrash(id)); // Move email to Trash when deleted
+    dispatch(moveToTrash(id));
   };
 
   const handleNewMail = () => {
@@ -50,7 +50,7 @@ const DashboardPage: React.FC = () => {
         folder: "sent",
         ...values,
         sender: "you@trashmails.com",
-        receiver: "recipient@example.com", // You can set this dynamically as needed
+        receiver: "recipient@example.com",
         sentAt: new Date().toLocaleString(),
         receivedAt: new Date().toLocaleString(),
         read: false,
@@ -68,10 +68,11 @@ const DashboardPage: React.FC = () => {
       {filteredEmails.map((email) => (
         <li
           key={email.id}
-          className={`p-3 rounded-xl ${currentTheme === 'dark' ? 'bg-gray-700 text-white' : 'bg-white'} shadow-sm cursor-pointer hover:bg-blue-50 transition-all duration-200 ${
-            email.read ? "text-gray-600" : "font-semibold"
+          className={`p-3 rounded-xl ${currentTheme === 'dark' ? 'bg-gray-800 text-white hover:bg-gray-600' : 'bg-white text-black hover:bg-gray-100'} shadow-sm cursor-pointer transition-all duration-200 ${
+            email.read ? "text-gray-400" : "font-semibold"
           }`}
           onClick={() => showEmail(email.id)}
+          style={{ transition: 'color 0.3s' }}
         >
           <h4 className="text-lg truncate">{email.subject}</h4>
           <p className="truncate">{email.sender}</p>
@@ -79,7 +80,7 @@ const DashboardPage: React.FC = () => {
             <Button
               type="text"
               size="small"
-              className="text-red-500"
+              className={`text-red-500 ${currentTheme === 'dark' ? '!text-white' : ''}`} // Override for dark mode
               onClick={(e) => {
                 e.stopPropagation();
                 handleDeleteEmail(email.id);
@@ -97,12 +98,12 @@ const DashboardPage: React.FC = () => {
     if (!email) return null;
 
     return (
-      <div>
+      <div className={currentTheme === 'dark' ? 'text-white' : 'text-black'}>
         <h3 className="font-medium text-lg mb-2">{email.subject}</h3>
-        <p className="text-gray-600 mb-1">From: {email.sender}</p>
-        <p className="text-gray-600 mb-1">To: {email.receiver}</p>
-        <p className="text-gray-600 mb-1">Sent: {email.sentAt}</p>
-        <p className="text-gray-600 mb-4">Received: {email.receivedAt}</p>
+        <p className="mb-1">From: {email.sender}</p>
+        <p className="mb-1">To: {email.receiver}</p>
+        <p className="mb-1">Sent: {email.sentAt}</p>
+        <p className="mb-4">Received: {email.receivedAt}</p>
         <div className="whitespace-pre-wrap">{email.body}</div>
       </div>
     );
@@ -124,31 +125,31 @@ const DashboardPage: React.FC = () => {
   ];
 
   return (
-    <div className={`min-h-screen flex flex-col ${currentTheme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gray-50'} p-4 lg:p-6`}>
+    <div className={`min-h-screen rounded-3xl flex flex-col ${currentTheme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gray-50 text-black'} p-4 lg:p-6`}>
       {/* Header */}
-      <header className={`bg-white p-2 rounded-xl shadow-sm flex justify-between items-center mb-3 ${currentTheme === 'dark' && 'bg-gray-700 text-white'}`}>
+      <header className={`p-2 rounded-xl shadow-sm flex justify-between items-center mb-3 ${currentTheme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-black'}`}>
         <div className="flex items-center gap-2">
           <Image src="/hero.png" height={35} width={35} alt="logo" />
           <h1 className="text-lg text-blue-600 font-medium">TrashMails Dashboard</h1>
         </div>
         <Dropdown menu={{ items: menuItems }} trigger={["click"]}>
-          <Button className="text-blue-600" type="text">
+          <Button className={`text-blue-600 ${currentTheme === 'dark' && 'text-white'}`} type="text">
             Actions <DownOutlined />
           </Button>
         </Dropdown>
       </header>
 
       {/* Storage Bar */}
-      <div className={`bg-white p-3 rounded-xl shadow-sm flex items-center mb-3 ${currentTheme === 'dark' && 'bg-gray-700 text-white'}`}>
+      <div className={`p-3 rounded-xl shadow-sm flex items-center mb-3 ${currentTheme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
         <LucideMail className="text-blue-600 mr-2" size={20} />
         <Progress percent={70} showInfo={false} strokeColor="#1890ff" className="flex-1" />
-        <span className="ml-4 text-gray-500 text-sm">15 GB of 20 GB used</span>
+        <span className={`ml-4 text-gray-500 text-sm ${currentTheme === 'dark' && 'text-gray-300'}`}>15 GB of 20 GB used</span>
       </div>
 
       {/* Main Content */}
       <div className="flex flex-1 flex-col lg:flex-row">
         {/* Sidebar */}
-        <aside className={`w-full lg:w-64 p-2 rounded-xl shadow-sm mb-3 lg:mb-0 lg:mr-3 ${currentTheme === 'dark' ? 'bg-gray-700 text-white' : 'bg-white'}`}>
+        <aside className={`w-full lg:w-64 p-2 rounded-xl shadow-sm mb-3 lg:mb-0 lg:mr-3 ${currentTheme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
           <h2 className="text-lg text-blue-600 font-medium mb-3">Folders</h2>
           <Menu
             mode="inline"
@@ -160,12 +161,12 @@ const DashboardPage: React.FC = () => {
               { key: "drafts", icon: <EditOutlined />, label: "Drafts" },
               { key: "trash", icon: <DeleteOutlined />, label: "Trash" },
             ]}
-            className={`text-white ${currentTheme === 'dark' ? 'bg-gray-700' : 'bg-white'}`} // Updated className
+            className={`text-white ${currentTheme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}
           />
         </aside>
 
         {/* Email List */}
-        <main className={`flex-1 p-2 bg-white rounded-xl shadow-sm overflow-y-auto ${currentTheme === 'dark' && 'bg-gray-700 text-white'}`}>
+        <main className={`flex-1 p-2 rounded-xl shadow-sm overflow-y-auto ${currentTheme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white'}`}>
           <h2 className="text-xl mb-3 text-blue-600 font-medium capitalize">{activeFolder}</h2>
           {renderEmailList()}
         </main>
@@ -181,33 +182,39 @@ const DashboardPage: React.FC = () => {
             Close
           </Button>,
         ]}
-        className="rounded-xl"
-        bodyStyle={{ maxHeight: "60vh", overflowY: "auto" }}
-        width="80%" // Adjust the width as needed
+        className={`rounded-xl ${currentTheme === 'dark' ? 'ant-modal-content-dark' : ''}`} // Adjusting class for dark mode
       >
         {renderEmailContent()}
       </Modal>
 
       {/* New Mail Modal */}
       <Modal
-        title="Compose New Mail"
+        title="New Mail"
         open={isNewMailModalVisible}
         onCancel={() => setNewMailModalVisible(false)}
         footer={null}
-        className="rounded-xl"
+        className={`rounded-xl ${currentTheme === 'dark' ? 'ant-modal-content-dark' : ''}`} // Adjusting class for dark mode
+        bodyStyle={{ maxHeight: "60vh", overflowY: "auto" }}
+        width="80%"
       >
-        <Form layout="vertical" onFinish={handleSendMail}>
-          <Form.Item name="subject" label="Subject" rules={[{ required: true, message: "Please enter a subject" }]}>
-            <Input />
+        <Form onFinish={handleSendMail}>
+          <Form.Item
+            name="subject"
+            rules={[{ required: true, message: "Please enter a subject" }]}
+          >
+            <Input placeholder="Subject" />
           </Form.Item>
-          <Form.Item name="body" label="Body" rules={[{ required: true, message: "Please enter the email body" }]}>
-            <TextArea rows={4} />
+          <Form.Item
+            name="body"
+            rules={[{ required: true, message: "Please enter a message" }]}
+          >
+            <TextArea placeholder="Message" rows={8} />
           </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" className="w-full">
+          <div className="text-right">
+            <Button type="primary" htmlType="submit">
               Send
             </Button>
-          </Form.Item>
+          </div>
         </Form>
       </Modal>
 
@@ -217,13 +224,19 @@ const DashboardPage: React.FC = () => {
         open={isSettingsModalVisible}
         onCancel={() => setSettingsModalVisible(false)}
         footer={null}
-        className="rounded-xl"
+        className={`rounded-xl ${currentTheme === 'dark' ? 'ant-modal-content-dark' : ''}`} // Adjusting class for dark mode
       >
-        <h3 className="font-medium mb-3">Theme</h3>
-        <Radio.Group value={currentTheme} onChange={handleThemeChange}>
-          <Radio.Button value="light">Light</Radio.Button>
-          <Radio.Button value="dark">Dark</Radio.Button>
-        </Radio.Group>
+        <div>
+          <h3 className="text-lg font-medium mb-2">Theme</h3>
+          <Radio.Group
+            value={currentTheme}
+            onChange={handleThemeChange}
+            className="flex flex-col space-y-2"
+          >
+            <Radio value="light">Light</Radio>
+            <Radio value="dark">Dark</Radio>
+          </Radio.Group>
+        </div>
       </Modal>
     </div>
   );
