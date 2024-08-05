@@ -54,4 +54,6 @@
     animation: fadeInRight 1s ease-out forwards;
   }
 
-  
+  .topview-btn{
+    color: #fff!important;
+  }

@@ -1,6 +1,9 @@
+// "use client"
+
 import "./globals.css";
 
 import type { Metadata } from "next";
+import { Provider } from "react-redux";
 // import { Provider } from "react-redux";
 import { store } from "./redux/store";
 
@@ -16,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="mx-10 my-10 sm:my-0 
+      <body className="mx-10 my-10 sm:my-0 xs:my-0 md:my-7
       bg-gradient-to-t from-black via-gray-900 to-gray-800">
         {/* <Provider store={store}> */}
           {children}

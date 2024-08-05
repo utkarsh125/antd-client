@@ -194,8 +194,7 @@ const DashboardPage: React.FC = () => {
         onCancel={() => setNewMailModalVisible(false)}
         footer={null}
         className={`rounded-xl ${currentTheme === 'dark' ? 'ant-modal-content-dark' : ''}`} // Adjusting class for dark mode
-        bodyStyle={{ maxHeight: "60vh", overflowY: "auto" }}
-        width="80%"
+        style={{ maxHeight: "60vh", overflowY: "auto" }} // Use `style` instead of `bodyStyle`
       >
         <Form onFinish={handleSendMail}>
           <Form.Item
@@ -225,6 +224,7 @@ const DashboardPage: React.FC = () => {
         onCancel={() => setSettingsModalVisible(false)}
         footer={null}
         className={`rounded-xl ${currentTheme === 'dark' ? 'ant-modal-content-dark' : ''}`} // Adjusting class for dark mode
+        style={{}} // Empty object to prevent warnings
       >
         <div>
           <h3 className="text-lg font-medium mb-2">Theme</h3>

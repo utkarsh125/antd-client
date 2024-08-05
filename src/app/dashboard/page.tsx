@@ -8,13 +8,10 @@ import { store } from '../redux/store'
 
 const page = () => {
   return (
-    <div>
-        <TopView />
-        <Provider store={store}>
-          <DashboardPage />
-        </Provider>
-        
-    </div>
+    <Provider store={store}>
+      <TopView />
+      <DashboardPage />
+    </Provider>
   )
 }
 
