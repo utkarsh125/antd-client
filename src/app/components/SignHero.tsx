@@ -55,7 +55,7 @@ const SignIn: React.FC = () => {
             <p className="text-sm text-gray-300 mb-4">
               No Setup Required.{" "}
               <a href="#" className="text-blue-400">
-                Sign up for free.
+                Sign in to get started.
               </a>
             </p>
 

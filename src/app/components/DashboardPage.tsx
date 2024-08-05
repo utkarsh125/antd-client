@@ -1,51 +1,92 @@
 "use client";
 
-import { Button, Dropdown, Menu, Modal, Progress } from "antd";
-import {
-  DeleteOutlined,
-  DownOutlined,
-  EditOutlined,
-  InboxOutlined,
-  PlusOutlined,
-  SendOutlined,
-  SettingOutlined,
-} from "@ant-design/icons";
+import { Button, Dropdown, Form, Input, Menu, MenuProps, Modal, Progress, Radio } from "antd";
+import { DeleteOutlined, DownOutlined, EditOutlined, InboxOutlined, PlusOutlined, SendOutlined, SettingOutlined } from "@ant-design/icons";
+import React, { useState } from "react";
+import { addEmail, markAsRead, moveToTrash, selectEmail } from "../redux/features/emailSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 import Image from "next/image";
 import { LucideMail } from "lucide-react";
-import type { MenuProps } from "antd";
-import React from "react";
+import { RadioChangeEvent } from 'antd/es/radio'; // Added import
 import { RootState } from "../redux/store";
-import { selectEmail } from "../redux/features/emailSlice";
 import { setActiveFolder } from "../redux/features/folderSlice";
+import { setTheme } from "../redux/features/themeSlice";
+
+const { TextArea } = Input;
 
 const DashboardPage: React.FC = () => {
   const dispatch = useDispatch();
   const emails = useSelector((state: RootState) => state.email.emails);
   const selectedEmailId = useSelector((state: RootState) => state.email.selectedEmailId);
   const activeFolder = useSelector((state: RootState) => state.folder.activeFolder);
+  const currentTheme = useSelector((state: RootState) => state.theme.currentTheme);
+
+  const [isNewMailModalVisible, setNewMailModalVisible] = useState(false);
+  const [isSettingsModalVisible, setSettingsModalVisible] = useState(false);
 
   const filteredEmails = emails.filter((email) => email.folder === activeFolder);
 
   const showEmail = (id: string) => {
     dispatch(selectEmail(id));
+    dispatch(markAsRead(id)); // Mark email as read when opened
   };
 
   const closeModal = () => {
     dispatch(selectEmail(""));
   };
 
+  const handleDeleteEmail = (id: string) => {
+    dispatch(moveToTrash(id)); // Move email to Trash when deleted
+  };
+
+  const handleNewMail = () => {
+    setNewMailModalVisible(true);
+  };
+
+  const handleSendMail = (values: { subject: string; body: string }) => {
+    dispatch(
+      addEmail({
+        folder: "sent",
+        ...values,
+        sender: "you@trashmails.com",
+        receiver: "recipient@example.com", // You can set this dynamically as needed
+        sentAt: new Date().toLocaleString(),
+        receivedAt: new Date().toLocaleString(),
+        read: false,
+      })
+    );
+    setNewMailModalVisible(false);
+  };
+
+  const handleThemeChange = (e: RadioChangeEvent) => {
+    dispatch(setTheme(e.target.value as 'light' | 'dark'));
+  };
+
   const renderEmailList = () => (
-    <ul>
+    <ul className="space-y-2">
       {filteredEmails.map((email) => (
         <li
           key={email.id}
-          className={`mb-2 p-4 rounded-3xl bg-white shadow-lg cursor-pointer hover:bg-blue-50 ${email.read ? '' : 'font-bold'}`}
+          className={`p-3 rounded-xl ${currentTheme === 'dark' ? 'bg-gray-700 text-white' : 'bg-white'} shadow-sm cursor-pointer hover:bg-blue-50 transition-all duration-200 ${
+            email.read ? "text-gray-600" : "font-semibold"
+          }`}
           onClick={() => showEmail(email.id)}
         >
-          <h4>{email.subject}</h4>
-          <p className="text-gray-600">{email.sender}</p>
+          <h4 className="text-lg truncate">{email.subject}</h4>
+          <p className="truncate">{email.sender}</p>
+          <div className="flex justify-end">
+            <Button
+              type="text"
+              size="small"
+              className="text-red-500"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDeleteEmail(email.id);
+              }}
+              icon={<DeleteOutlined />}
+            />
+          </div>
         </li>
       ))}
     </ul>
@@ -57,9 +98,12 @@ const DashboardPage: React.FC = () => {
 
     return (
       <div>
-        <h3 className="font-bold text-lg mb-2">{email.subject}</h3>
-        <p className="text-gray-600 mb-4">From: {email.sender}</p>
-        <p>{email.body}</p>
+        <h3 className="font-medium text-lg mb-2">{email.subject}</h3>
+        <p className="text-gray-600 mb-1">From: {email.sender}</p>
+        <p className="text-gray-600 mb-1">To: {email.receiver}</p>
+        <p className="text-gray-600 mb-1">Sent: {email.sentAt}</p>
+        <p className="text-gray-600 mb-4">Received: {email.receivedAt}</p>
+        <div className="whitespace-pre-wrap">{email.body}</div>
       </div>
     );
   };
@@ -69,22 +113,23 @@ const DashboardPage: React.FC = () => {
       label: "New Mail",
       key: "1",
       icon: <PlusOutlined />,
-      onClick: () => dispatch(selectEmail("new")),
+      onClick: handleNewMail,
     },
     {
       label: "Settings",
       key: "2",
       icon: <SettingOutlined />,
+      onClick: () => setSettingsModalVisible(true),
     },
   ];
 
   return (
-    <div className="min-h-screen rounded-3xl mt-10 flex flex-col bg-gray-100 p-4 lg:p-6">
+    <div className={`min-h-screen flex flex-col ${currentTheme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gray-50'} p-4 lg:p-6`}>
       {/* Header */}
-      <header className="bg-white p-4 rounded-3xl shadow-lg flex justify-between items-center mb-4">
+      <header className={`bg-white p-2 rounded-xl shadow-sm flex justify-between items-center mb-3 ${currentTheme === 'dark' && 'bg-gray-700 text-white'}`}>
         <div className="flex items-center gap-2">
-          <Image src="/hero.png" height={40} width={40} alt="logo" />
-          <h1 className="text-xl text-blue-600 font-semibold">TrashMails Dashboard</h1>
+          <Image src="/hero.png" height={35} width={35} alt="logo" />
+          <h1 className="text-lg text-blue-600 font-medium">TrashMails Dashboard</h1>
         </div>
         <Dropdown menu={{ items: menuItems }} trigger={["click"]}>
           <Button className="text-blue-600" type="text">
@@ -94,17 +139,17 @@ const DashboardPage: React.FC = () => {
       </header>
 
       {/* Storage Bar */}
-      <div className="bg-white p-4 rounded-3xl shadow-lg flex items-center mb-4">
+      <div className={`bg-white p-3 rounded-xl shadow-sm flex items-center mb-3 ${currentTheme === 'dark' && 'bg-gray-700 text-white'}`}>
         <LucideMail className="text-blue-600 mr-2" size={20} />
         <Progress percent={70} showInfo={false} strokeColor="#1890ff" className="flex-1" />
-        <span className="ml-4 text-gray-600">15 GB of 20 GB used</span>
+        <span className="ml-4 text-gray-500 text-sm">15 GB of 20 GB used</span>
       </div>
 
       {/* Main Content */}
       <div className="flex flex-1 flex-col lg:flex-row">
         {/* Sidebar */}
-        <aside className="w-full lg:w-64 bg-white p-4 rounded-3xl shadow-lg mb-4 lg:mb-0 lg:mr-4">
-          <h2 className="text-xl text-blue-600 font-semibold mb-4">Folders</h2>
+        <aside className={`w-full lg:w-64 p-2 rounded-xl shadow-sm mb-3 lg:mb-0 lg:mr-3 ${currentTheme === 'dark' ? 'bg-gray-700 text-white' : 'bg-white'}`}>
+          <h2 className="text-lg text-blue-600 font-medium mb-3">Folders</h2>
           <Menu
             mode="inline"
             defaultSelectedKeys={["inbox"]}
@@ -115,12 +160,13 @@ const DashboardPage: React.FC = () => {
               { key: "drafts", icon: <EditOutlined />, label: "Drafts" },
               { key: "trash", icon: <DeleteOutlined />, label: "Trash" },
             ]}
+            className={`text-white ${currentTheme === 'dark' ? 'bg-gray-700' : 'bg-white'}`} // Updated className
           />
         </aside>
 
         {/* Email List */}
-        <main className="flex-1 p-6 bg-white rounded-3xl shadow-lg overflow-y-auto">
-          <h2 className="text-2xl mb-4 text-blue-600 font-semibold capitalize">{activeFolder}</h2>
+        <main className={`flex-1 p-2 bg-white rounded-xl shadow-sm overflow-y-auto ${currentTheme === 'dark' && 'bg-gray-700 text-white'}`}>
+          <h2 className="text-xl mb-3 text-blue-600 font-medium capitalize">{activeFolder}</h2>
           {renderEmailList()}
         </main>
       </div>
@@ -128,16 +174,56 @@ const DashboardPage: React.FC = () => {
       {/* Email View Modal */}
       <Modal
         title="Email Content"
-        visible={!!selectedEmailId}
+        open={!!selectedEmailId}
         onCancel={closeModal}
         footer={[
           <Button key="close" onClick={closeModal}>
             Close
           </Button>,
         ]}
-        className="rounded-3xl"
+        className="rounded-xl"
+        bodyStyle={{ maxHeight: "60vh", overflowY: "auto" }}
+        width="80%" // Adjust the width as needed
       >
         {renderEmailContent()}
+      </Modal>
+
+      {/* New Mail Modal */}
+      <Modal
+        title="Compose New Mail"
+        open={isNewMailModalVisible}
+        onCancel={() => setNewMailModalVisible(false)}
+        footer={null}
+        className="rounded-xl"
+      >
+        <Form layout="vertical" onFinish={handleSendMail}>
+          <Form.Item name="subject" label="Subject" rules={[{ required: true, message: "Please enter a subject" }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item name="body" label="Body" rules={[{ required: true, message: "Please enter the email body" }]}>
+            <TextArea rows={4} />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" className="w-full">
+              Send
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      {/* Settings Modal */}
+      <Modal
+        title="Settings"
+        open={isSettingsModalVisible}
+        onCancel={() => setSettingsModalVisible(false)}
+        footer={null}
+        className="rounded-xl"
+      >
+        <h3 className="font-medium mb-3">Theme</h3>
+        <Radio.Group value={currentTheme} onChange={handleThemeChange}>
+          <Radio.Button value="light">Light</Radio.Button>
+          <Radio.Button value="dark">Dark</Radio.Button>
+        </Radio.Group>
       </Modal>
     </div>
   );
