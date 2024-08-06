@@ -1,5 +1,6 @@
 "use client"
 
+import Dashboard from '../components/Dashboard'
 import DashboardPage from '../components/DashboardPage'
 import { Provider } from 'react-redux'
 import React from 'react'
@@ -10,7 +11,8 @@ const page = () => {
   return (
     <Provider store={store}>
       <TopView />
-      <DashboardPage />
+      {/* <DashboardPage /> */}
+      <Dashboard />
     </Provider>
   )
 }
