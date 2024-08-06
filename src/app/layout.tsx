@@ -19,10 +19,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="mx-10 my-10 sm:my-0 xs:my-0 md:my-7
+      <body className="mx-5 my-10 sm:my-0 xs:my-0 md:my-7
       bg-gradient-to-t from-black via-gray-900 to-gray-800">
         {/* <Provider store={store}> */}
+        
           {children}
+
         {/* </Provider> */}
       </body>
     </html>

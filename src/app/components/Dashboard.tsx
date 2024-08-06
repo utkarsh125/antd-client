@@ -162,7 +162,7 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Compose Modal */}
-      <Modal title="Compose Email" visible={isComposeModalVisible} onCancel={handleComposeCancel} footer={null}>
+      <Modal title="Compose Email" open={isComposeModalVisible} onCancel={handleComposeCancel} footer={null}>
         <Form layout="vertical" form={form} onFinish={handleComposeFinish}>
           <Form.Item label="To" name="to" rules={[{ required: true, message: 'Please enter the recipient\'s email!' }]}>
             <Input placeholder="Recipient's email" />
