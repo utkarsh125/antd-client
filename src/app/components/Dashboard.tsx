@@ -5,7 +5,6 @@ import React, { useState } from 'react';
 import { moveToTrash, sendEmail, setFilter, setSelectedEmail, toggleImportant, toggleRead, toggleStarred } from '../redux/features/emailSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
-// Define the Email type if it's not imported from a separate file
 interface Email {
   id: number;
   sender: string;
@@ -14,14 +13,14 @@ interface Email {
   isRead: boolean;
   isStarred: boolean;
   isImportant: boolean;
-  folder: 'primary' | 'promotions' | 'social' | 'updates' | 'trash' | 'sent'; // Add 'sent' folder
+  folder: 'primary' | 'promotions' | 'social' | 'updates' | 'trash' | 'sent';
   content: string;
 }
 
 const Dashboard: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const { emails, filter, selectedEmail } = useSelector((state: RootState) => state.email);
-  const [isComposeModalVisible, setComposeModalVisible] = useState(false);
+  const [isComposeModalVisible, setComposeModalVisible] = useState<boolean>(false);
   const [form] = Form.useForm();
 
   const filteredEmails = emails.filter((email) => email.folder === filter).slice(0, 20);
@@ -52,7 +51,7 @@ const Dashboard: React.FC = () => {
       dispatch(setSelectedEmail(id));
     } else {
       console.error("Email not found");
-      dispatch(setSelectedEmail(null)); // or handle as needed
+      dispatch(setSelectedEmail(null)); 
     }
   };
 
@@ -82,45 +81,53 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex flex-col md:flex-row h-screen">
       {/* Sidebar */}
-      <div className="w-64 bg-gray-50 p-4">
-        <Button type="primary" className="w-full mb-6" onClick={handleCompose}>Compose</Button>
-        <div className="space-y-2">
-          <div className="flex items-center space-x-2 text-gray-700 cursor-pointer" onClick={() => handleFilterChange('primary')}>
-            <Inbox className="text-xl" />
-            <span>Inbox</span>
+      <div className="w-full md:w-64 bg-gray-50 p-4">
+        <div className="flex items-center space-x-4 mb-6">
+          <img src="/user.png" alt="User Avatar" className="w-10 h-10 rounded-full" />
+          <div>
+            <h2 className="font-semibold text-sm md:text-base">John Doe</h2>
+            <p className="text-xs md:text-sm text-gray-500">example@gmail.com</p>
           </div>
-          <div className="flex items-center space-x-2 text-gray-700 cursor-pointer" onClick={() => handleFilterChange('updates')}>
-            <Star className="text-xl" />
+        </div>
+        <Button type="primary" className="w-full mb-6 text-sm md:text-base" onClick={handleCompose}>Compose</Button>
+        <div className="space-y-2">
+          <div className="flex items-center space-x-2 text-gray-700 cursor-pointer text-sm md:text-base" onClick={() => handleFilterChange('primary')}>
+            <Inbox className="text-lg md:text-xl" />
+            <span>Inbox</span>
+            <Badge count={emails.filter(email => email.folder === 'primary').length} className="ml-auto" />
+          </div>
+          <div className="flex items-center space-x-2 text-gray-700 cursor-pointer text-sm md:text-base" onClick={() => handleFilterChange('updates')}>
+            <Star className="text-lg md:text-xl" />
             <span>Updates</span>
           </div>
-          <div className="flex items-center space-x-2 text-gray-700 cursor-pointer" onClick={() => handleFilterChange('social')}>
-            <Send className="text-xl" />
+          <div className="flex items-center space-x-2 text-gray-700 cursor-pointer text-sm md:text-base" onClick={() => handleFilterChange('social')}>
+            <Send className="text-lg md:text-xl" />
             <span>Social</span>
           </div>
-          <div className="flex items-center space-x-2 text-gray-700 cursor-pointer" onClick={() => handleFilterChange('promotions')}>
-            <Bookmark className="text-xl" />
+          <div className="flex items-center space-x-2 text-gray-700 cursor-pointer text-sm md:text-base" onClick={() => handleFilterChange('promotions')}>
+            <Bookmark className="text-lg md:text-xl" />
             <span>Promotions</span>
           </div>
-          <div className="flex items-center space-x-2 text-gray-700 cursor-pointer" onClick={() => handleFilterChange('trash')}>
-            <Trash2 className="text-xl" />
+          <div className="flex items-center space-x-2 text-gray-700 cursor-pointer text-sm md:text-base" onClick={() => handleFilterChange('trash')}>
+            <Trash2 className="text-lg md:text-xl" />
             <span>Trash</span>
           </div>
-          <div className="flex items-center space-x-2 text-gray-700 cursor-pointer" onClick={() => handleFilterChange('sent')}>
-            <Send className="text-xl" />
+          <div className="flex items-center space-x-2 text-gray-700 cursor-pointer text-sm md:text-base" onClick={() => handleFilterChange('sent')}>
+            <Send className="text-lg md:text-xl" />
             <span>Sent</span>
           </div>
         </div>
       </div>
 
       {/* Email List */}
-      <div className="flex-1 bg-white p-4 border-r border-gray-200">
+      <div className="flex-1 bg-white p-2 md:p-4 border-r border-gray-200">
         <div className="space-y-2">
           {filteredEmails.map((email) => (
             <div
               key={email.id}
-              className="flex justify-between items-center py-2 border-b border-gray-200 cursor-pointer"
+              className="flex justify-between items-center py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100 text-sm md:text-base"
               onClick={() => handleEmailClick(email.id)}
             >
               <div className="flex items-center space-x-2">
@@ -147,19 +154,19 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Email Details */}
-      <div className="flex-1 bg-gray-50 p-4">
+      <div className="flex-1 bg-gray-50 p-2 md:p-4">
         {selectedEmail ? (
           <div>
-            <h2 className="text-xl font-bold">{selectedEmail.subject}</h2>
-            <p className="text-gray-600">From: {selectedEmail.sender}</p>
-            <p className="mt-4">{selectedEmail.content}</p>
+            <h2 className="text-lg md:text-xl font-bold mb-2">{selectedEmail.subject}</h2>
+            <p className="text-gray-600 mb-4">From: {selectedEmail.sender}</p>
+            <p>{selectedEmail.content}</p>
             {!selectedEmail.isRead && (
-              <Button onClick={() => handleToggleRead(selectedEmail.id)}>Mark as Read</Button>
+              <Button onClick={() => handleToggleRead(selectedEmail.id)} className="mt-4">Mark as Read</Button>
             )}
           </div>
         ) : (
-          <div className="text-gray-500">
-            <ChevronRight /> No email selected or email not found.
+          <div className="text-gray-500 flex items-center">
+            <ChevronRight className="mr-2" /> No email selected or email not found.
           </div>
         )}
       </div>

@@ -21,7 +21,7 @@ const TopView: React.FC = () => {
       key: "logout",
       icon: <HomeOutlined />,
       onClick: () => {
-        // Handle logout logic here
+        router.push("/");
         console.log("Logout");
       },
     },
