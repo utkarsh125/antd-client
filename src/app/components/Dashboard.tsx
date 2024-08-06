@@ -153,6 +153,9 @@ const Dashboard: React.FC = () => {
             <h2 className="text-xl font-bold">{selectedEmail.subject}</h2>
             <p className="text-gray-600">From: {selectedEmail.sender}</p>
             <p className="mt-4">{selectedEmail.content}</p>
+            {!selectedEmail.isRead && (
+              <Button onClick={() => handleToggleRead(selectedEmail.id)}>Mark as Read</Button>
+            )}
           </div>
         ) : (
           <div className="text-gray-500">
