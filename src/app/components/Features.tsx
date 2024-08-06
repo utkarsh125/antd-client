@@ -21,12 +21,7 @@ const features = [
     title: 'Real-time Notifications',
     description: 'Stay updated with real-time notifications for new emails.',
     icon: <Clock size={48} />,
-  },
-  {
-    title: 'Collaborative Inbox',
-    description: 'Work together with team members in shared inboxes.',
-    icon: <Users size={48} />,
-  },
+  }, 
   {
     title: 'Advanced Analytics',
     description: 'Get detailed analytics and insights on your email activities.',
