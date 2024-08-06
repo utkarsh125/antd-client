@@ -4,6 +4,7 @@ import { Button, Checkbox, Form, FormProps, Input } from "antd";
 import { GoogleCircleFilled, InboxOutlined } from "@ant-design/icons";
 
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 type FieldType = {
@@ -22,7 +23,7 @@ const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
 const SignIn: React.FC = () => {
   return (
     <div className="relative flex flex-col p-10 rounded-3xl justify-center items-center px-4 sm:px-6 lg:px-8 my-8 bg-gradient-to-r from-blue-600 via-blue-900 to-blue-900">
-      {/* Decorative Background Elements */}
+
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
         <div className="absolute top-0 left-0 w-64 h-64 bg-gradient-to-r from-blue-900 to-blue-300 rounded-full opacity-20 blur-3xl"></div>
         <div className="absolute bottom-0 right-0 w-64 h-64 bg-gradient-to-r from-pink-500 to-yellow-500 rounded-full opacity-20 blur-3xl"></div>
@@ -38,7 +39,7 @@ const SignIn: React.FC = () => {
         {/* Sidebar */}
         <div className="relative hidden md:flex w-full md:w-1/2 bg-white shadow-lg animate-fade-in-left">
           <Image
-            src="/mail.jpg" // Replace with actual path of the uploaded image
+            src="/mail.jpg" 
             alt="Dashboard"
             layout="fill"
             objectFit="cover"
@@ -71,7 +72,9 @@ const SignIn: React.FC = () => {
               <Form.Item<FieldType>
                 label={<span className="text-white">Email</span>}
                 name="email"
-                rules={[{ required: true, message: "Please enter your email." }]}
+                rules={[
+                  { required: true, message: "Please enter your email." },
+                ]}
               >
                 <Input placeholder="Email" className="text-black" />
               </Form.Item>
@@ -79,7 +82,9 @@ const SignIn: React.FC = () => {
               <Form.Item<FieldType>
                 label={<span className="text-white">Password</span>}
                 name="password"
-                rules={[{ required: true, message: "Please enter your password." }]}
+                rules={[
+                  { required: true, message: "Please enter your password." },
+                ]}
               >
                 <Input.Password placeholder="Password" className="text-black" />
               </Form.Item>
@@ -95,9 +100,11 @@ const SignIn: React.FC = () => {
               </div>
 
               <Form.Item>
-                <Button type="primary" htmlType="submit" className="w-full">
-                  Sign in
-                </Button>
+                <Link href={`/dashboard`}>
+                  <Button type="primary" htmlType="submit" className="w-full">
+                    Sign in
+                  </Button>
+                </Link>
               </Form.Item>
             </Form>
 

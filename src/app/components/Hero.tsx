@@ -68,7 +68,7 @@ const Hero: React.FC = () => {
           alt="Email client mockup"
           width={1280}
           height={800}
-          className="w-full md:w-auto md:h-auto lg:w-3/4 lg:h-1/2 object-cover object-center"
+          className="w-full md:w-auto md:h-auto lg:w-3/4 lg:h-1/2 rounded-3xl object-cover object-center"
         />
       </div>
     </div>

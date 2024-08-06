@@ -1,13 +1,13 @@
 "use client";
 
 import { Button, ConfigProvider } from "antd";
-import { CloseOutlined, MenuOutlined } from "@ant-design/icons";
+import { CloseOutlined, GithubFilled, MenuOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
 
-const Navbar: React.FC = () => {
+const SignNav: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -76,10 +76,10 @@ const Navbar: React.FC = () => {
           className="transform hover:-translate-y-1 duration-300 hidden md:inline-block"
         >
           <Button
-            type="primary"
+            type="text"
             className="!text-white !bg-blue-500 !rounded-lg !px-6 !py-2 !shadow-lg transition-all duration-300 hover:!bg-blue-600 hover:!shadow-xl"
           >
-            Get Started
+            Continue as developer <GithubFilled />
           </Button>
         </Link>
 
@@ -124,20 +124,19 @@ const Navbar: React.FC = () => {
           </Button>
           <Link href="/sign-in">
             <Button
-              type="primary"
+              type="text"
               className="mt-4 w-full text-center !bg-blue-500 !rounded-lg !shadow-lg transition-all duration-300 hover:!bg-blue-600 hover:!shadow-xl"
               onClick={toggleMenu}
             >
-              Get Started
+              Continue as a developer <GithubFilled />
             </Button>
           </Link>
         </div>
       )}
 
-      {/* Adds margin to hero section when menu is open */}
       <div className={`${menuOpen ? "mt-6" : ""}`}></div>
     </ConfigProvider>
   );
 };
 
-export default Navbar;
+export default SignNav;

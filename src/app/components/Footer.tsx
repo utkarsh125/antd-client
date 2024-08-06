@@ -19,7 +19,7 @@ const Footer: React.FC = () => {
   return (
     <div
       ref={footerRef}
-      className="bg-gradient-to-t rounded-3xl from-black to-gray-900 text-white py-8 px-4 md:px-8"
+      className="bg-gradient-to-t mb-12 rounded-3xl from-black to-gray-900 text-white py-8 px-4 md:px-8"
     >
       <div className="container mx-auto">
         <Row gutter={[16, 16]}>

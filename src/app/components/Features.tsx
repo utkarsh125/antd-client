@@ -9,7 +9,7 @@ import React from 'react';
 const features = [
   {
     title: 'Secure & Private',
-    description: 'Your privacy is our priority. All your emails are securely encrypted.',
+    description: 'Your privacy is our priority. All your emails are secure.',
     icon: <Shield size={48} />,
   },
   {
