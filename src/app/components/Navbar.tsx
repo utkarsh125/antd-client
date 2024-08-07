@@ -13,7 +13,7 @@ const Navbar: React.FC = () => {
   const toggleMenu = () => {
     setTimeout(() => {
       setMenuOpen(!menuOpen);
-    }, 100); // 100ms delay before toggling the menu
+    }, 100);
   };
 
   return (
@@ -22,19 +22,19 @@ const Navbar: React.FC = () => {
         token: {
           fontFamily: "Poppins, sans-serif",
           colorText: "#fff",
-          colorPrimary: "#1D4ED8", // Tailwind's blue-500
+          colorPrimary: "#1D4ED8",
           controlHeight: 40,
-          borderRadius: 8, // Consistent border radius for all components
-          colorBgContainer: "transparent", // Makes buttons blend with background
+          borderRadius: 8,
+          colorBgContainer: "transparent",
         },
         components: {
           Button: {
-            colorBgTextHover: "#1D4ED8", // Tailwind's blue-500
+            colorBgTextHover: "#1D4ED8",
             colorText: "#fff",
-            colorPrimaryHover: "#2563EB", // Slightly darker blue for hover
-            colorBgTextActive: "#1E40AF", // Even darker blue when active
+            colorPrimaryHover: "#2563EB",
+            colorBgTextActive: "#1E40AF",
             borderRadius: 8,
-            colorBorder: "#fff", // White border
+            colorBorder: "#fff",
           },
         },
       }}
@@ -49,7 +49,6 @@ const Navbar: React.FC = () => {
           </Link>
         </div>
 
-        {/* Desktop Menu */}
         <div className="hidden md:flex gap-6">
           <Button
             type="text"
@@ -83,7 +82,6 @@ const Navbar: React.FC = () => {
           </Button>
         </Link>
 
-        {/* Hamburger Menu Icon */}
         <div className="md:hidden">
           <Button
             type="text"
@@ -94,12 +92,10 @@ const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      {/* Mobile Menu */}
       {menuOpen && (
         <div
           className="flex flex-col items-center bg-gradient-to-tr from-gray-900 to-gray-800 text-white py-4 px-4 md:hidden rounded-3xl shadow-lg transition-all duration-300"
-          style={{ marginTop: "1rem" }} // Adding margin between navbar and hero section
+          style={{ marginTop: "1rem" }}
         >
           <Button
             type="text"
@@ -133,8 +129,6 @@ const Navbar: React.FC = () => {
           </Link>
         </div>
       )}
-
-      {/* Adds margin to hero section when menu is open */}
       <div className={`${menuOpen ? "mt-6" : ""}`}></div>
     </ConfigProvider>
   );
